@@ -1,0 +1,219 @@
+#include <vector>
+#include <cstdlib>
+#include <random>
+#include <algorithm>
+
+using namespace std;
+
+////////////// CREATERANDOM IMPLEMENTATION //////////////
+//
+// Generates a vector of random values.
+//
+// This function initializes (or resets) a vector and fills
+// it with a specified number of randomly generated elements
+// within a given range [min, max].
+//
+// It supports both integral and floating-point types by
+// selecting the appropriate random distribution.
+//
+// Time Complexity:
+//   - O(N)
+//
+// Space Complexity:
+//   - O(1) additional (modifies the vector in-place)
+//
+// Notes:
+//   - Existing contents of the vector are cleared
+//   - Uses Mersenne Twister (mt19937) for randomness
+//
+//////////////////////////////////////////////////////////
+template <typename T>
+void CreateRandom(vector<T>& list, size_t size, T min, T max)
+{
+    static random_device rd;
+    static mt19937 gen(rd());
+
+    list.clear();
+    list.reserve(size);
+
+    if constexpr (is_integral<T>::value) 
+    {
+        uniform_int_distribution<T> dist(min, max);
+        for (size_t i = 0; i < size; ++i) 
+        {
+            list.push_back(dist(gen));
+        }
+    }
+    else {
+        uniform_real_distribution<T> dist(min, max);
+        for (size_t i = 0; i < size; ++i) 
+        {
+            list.push_back(dist(gen));
+        }
+    }
+}
+
+////////////// RANDOMSHUFFLE IMPLEMENTATION //////////////
+//
+//              Random Shuffle Algorithm
+//
+// This function randomly permutes the elements of a vector
+// using a uniform distribution.
+//
+// It relies on std::shuffle, which implements an efficient
+// version of the Fisher–Yates shuffle algorithm.
+//
+// Time Complexity:
+//   - O(N)
+//
+// Space Complexity:
+//   - O(1)
+//
+// Notes:
+//   - Produces a uniform random permutation
+//   - Uses Mersenne Twister (mt19937) for randomness
+//
+//////////////////////////////////////////////////////////
+template <typename T>
+void RandomShuffle(vector<T>& list) 
+{
+    static random_device rd;
+    static mt19937 gen(rd());
+
+    shuffle(list.begin(), list.end(), gen);
+}
+
+////////////// CHECKIFSORTED IMPLEMENTATION //////////////
+//
+// Check If Sorted Function
+//
+// This function verifies whether a vector is sorted in
+// ascending order.
+//
+// It iterates through the vector and compares each element
+// with its successor. If any pair is found out of order,
+// the function immediately returns false.
+//
+// Time Complexity:
+//   - O(N)
+//
+// Space Complexity:
+//   - O(1)
+//
+// Notes:
+//   - Early exit improves performance in unsorted cases
+//   - Assumes operator '>' is defined for type T
+//
+//////////////////////////////////////////////////////////
+template <typename T>
+bool CheckIfSorted(const vector<T>& list)
+{
+    for (int i = 0; i < list.size() - 1; i++)
+        if (list[i] > list[i+1])
+            return false;
+	return true;
+}
+
+////////////// BUBBLESORT IMPLEMENTATION //////////////
+//
+//                Bubble Sort Algorithm
+//
+// This function sorts a vector using the Bubble Sort method.
+// The algorithm repeatedly traverses the list, comparing
+// adjacent elements and swapping them if they are in the
+// wrong order.
+//
+// After each pass, the largest unsorted element "bubbles up"
+// to its correct position at the end of the vector. This
+// process is repeated until the entire vector is sorted.
+//
+// Time Complexity:
+//   - Worst case: O(N^2)
+//   - Average case: O(N^2)
+//
+// Space Complexity:
+//   - O(1) (in-place sorting, no extra memory required)
+//
+///////////////////////////////////////////////////////
+template <typename T>
+void BubbleSort(vector<T>& list)
+{
+    if (CheckIfSorted(list))
+        return;
+
+	for (int i = 0; i < list.size(); i++)
+	{
+		for (int j = 0; j < list.size() - i - 1; j++)
+		{
+			if (list[j] > list[j + 1])
+			{
+                swap(list[j], list[j + 1]);
+			}
+		}
+	}
+}
+
+
+////////////// QUICKSORT IMPLEMENTATION //////////////
+//
+//                Quick Sort Algorithm
+//
+// This function sorts a vector using the Quick Sort method
+//
+// The algorithm works by selecting a pivot element (in this
+// case, randomly chosen), and partitioning the vector into
+// two subarrays:
+//   - Elements smaller than or equal to the pivot
+//   - Elements greater than the pivot
+//
+// The process is then recursively applied to the subarrays
+// until the entire vector is sorted.
+//
+// The use of a random pivot helps reduce the probability
+// of encountering the worst-case scenario.
+//
+// Time Complexity:
+//   - Worst case: O(N^2)
+//   - Average case: O(N log N)
+//
+// Space Complexity:
+//   - Worst case: O(N)
+//   - Average case: O(log N) 
+//
+// Notes:
+//   - In-place sorting (no additional data structures used)
+//
+///////////////////////////////////////////////////////
+template <typename T>
+void QuickSortRec(vector<T>& list, int low, int high)
+{
+    if (low < high)
+    {
+        int randomIndex = low + rand() % (high - low + 1);
+        swap(list[randomIndex], list[high]);
+
+        T pivot = list[high];
+        int i = low;
+
+        for (int j = low; j < high; j++)
+        {
+            if (list[j] <= pivot)
+            {
+                swap(list[i], list[j]);
+                i++;
+            }
+        }
+        swap(list[i], list[high]);
+        QuickSortRec(list, low, i - 1);
+        QuickSortRec(list, i + 1, high);
+    }
+}
+
+template <typename T>
+void QuickSort(vector<T>& list)
+{
+    if (CheckIfSorted(list))
+        return;
+
+	QuickSortRec(list, 0, list.size() - 1);
+}
