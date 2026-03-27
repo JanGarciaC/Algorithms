@@ -2,11 +2,8 @@
 //
 //                 TEST PROGRAM
 //
-// This program demonstrates the usage of several utility
-// and sorting functions defined in different header files.
-//
-// The execution time of each sorting algorithm is measured
-// using the <chrono> library and displayed in milliseconds.
+// This program demonstrates the usage of several algorithms
+// and functions defined in different header files.
 //
 // Available Functions (sorting.h):
 //   - CreateRandom
@@ -14,6 +11,9 @@
 //   - CheckIfSorted
 //   - BubbleSort
 //   - QuickSort
+//	 - InsertionSort
+//	 - MergeSort
+//	 - BogoSort
 //
 // Each function is documented in detail in its corresponding
 // header file.
@@ -33,7 +33,7 @@ int main()
 {
 	vector<int> llista;
 
-	CreateRandom(llista, 10000, 0, 1000000);
+	CreateRandom(llista, 1000000, 0, 1000000);
 
 	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
 	cout << "Sorting with QuickSort..." << endl;
@@ -45,25 +45,6 @@ int main()
 	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
 
 	auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-
-	cout << "Time elapsed: " << duration << endl;
-
-	cout << "/////////////////////////////////" << endl;
-
-	cout << "Shuffling vector... " << endl;
-
-	RandomShuffle(llista);
-
-	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
-	cout << "Sorting with BubbleSort..." << endl;
-
-	start = chrono::high_resolution_clock::now();
-	BubbleSort(llista);
-	end = chrono::high_resolution_clock::now();
-
-	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
-
-	duration = chrono::duration_cast<chrono::milliseconds>(end - start);
 
 	cout << "Time elapsed: " << duration << endl;
 }

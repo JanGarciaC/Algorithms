@@ -10,8 +10,8 @@ using namespace std;
 // Generates a vector of random values.
 //
 // This function initializes (or resets) a vector and fills
-// it with a specified number of randomly generated elements
-// within a given range [min, max].
+// it with a specified number (size) of randomly generated 
+// elements within a given range [min, max].
 //
 // It supports both integral and floating-point types by
 // selecting the appropriate random distribution.
@@ -216,4 +216,132 @@ void QuickSort(vector<T>& list)
         return;
 
 	QuickSortRec(list, 0, list.size() - 1);
+}
+
+////////////// BOGOSORT IMPLEMENTATION //////////////
+//
+//                Bogo Sort Algorithm
+//
+// This is a highly inefficient but funny sorting algorithm. 
+// It repeatedly shuffles the vector until it becomes sorted.
+//
+// Time Complexity:
+//   - O(N!)
+//
+// Space Complexity:
+//   - O(1) (in-place shuffling)
+//
+// Notes:
+//   - Not suitable for large vectors
+//   - Uses RandomShuffle function for shuffling
+//
+///////////////////////////////////////////////////////
+template <typename T>
+void BogoSort(vector<T>& list)
+{
+    while (!CheckIfSorted(list))
+    {
+        RandomShuffle(list);
+    }
+}
+
+////////////// INSERTIONSORT IMPLEMENTATION //////////////
+//
+//                Insertion Sort Algorithm
+//
+// This function sorts a vector using the Insertion Sort method.
+// It builds the sorted array one element at a time by
+// repeatedly taking the next unsorted element and inserting
+// it into the correct position.
+//
+// Time Complexity:
+//   - Worst case: O(N^2)
+//   - Best case (already sorted): O(N)
+//
+// Space Complexity:
+//   - O(1) (in-place)
+// 
+///////////////////////////////////////////////////////
+template <typename T>
+void InsertionSort(vector<T>& list)
+{
+    for (int i = 1; i < list.size(); i++)
+    {
+        T key = list[i];
+        int j = i - 1;
+
+        while (j >= 0 && list[j] > key)
+        {
+            list[j + 1] = list[j];
+            j--;
+        }
+        list[j + 1] = key;
+    }
+}
+
+////////////// MERGESORT IMPLEMENTATION //////////////
+//
+//                Merge Sort Algorithm
+//
+// This function sorts a vector using the Merge Sort method.
+// It recursively divides the vector into halves, sorts each
+// half, and then merges them into a single sorted array.
+//
+// Time Complexity:
+//   - Worst case: O(N log N)
+//   - Average case: O(N log N)
+//
+// Space Complexity:
+//   - O(N) additional space for merging
+//
+// Notes:
+//   - Stable sort
+//
+///////////////////////////////////////////////////////
+template <typename T>
+void Merge(vector<T>& list, int left, int mid, int right)
+{
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    vector<T> L(n1), R(n2);
+    for (int i = 0; i < n1; i++)
+        L[i] = list[left + i];
+    for (int i = 0; i < n2; i++)
+        R[i] = list[mid + 1 + i];
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2)
+    {
+        if (L[i] <= R[j])
+            list[k++] = L[i++];
+        else
+            list[k++] = R[j++];
+    }
+
+    while (i < n1)
+        list[k++] = L[i++];
+    while (j < n2)
+        list[k++] = R[j++];
+}
+
+template <typename T>
+void MergeSortRec(vector<T>& list, int left, int right)
+{
+    if (left < right)
+    {
+        int mid = left + (right - left) / 2;
+        MergeSortRec(list, left, mid);
+        MergeSortRec(list, mid + 1, right);
+        Merge(list, left, mid, right);
+    }
+}
+
+template <typename T>
+void MergeSort(vector<T>& list)
+{
+    if (CheckIfSorted(list))
+        return;
+
+    MergeSortRec(list, 0, list.size() - 1);
 }
