@@ -5,7 +5,8 @@
 // This program demonstrates the usage of several algorithms
 // and functions defined in different header files.
 //
-// Available Functions (sorting.h):
+// Available Files and Functions: 
+// · sorting.h:
 //   - CreateRandom
 //   - RandomShuffle
 //   - CheckIfSorted
@@ -14,6 +15,12 @@
 //	 - InsertionSort
 //	 - MergeSort
 //	 - BogoSort
+// 
+// · graph.h: --> includes class Vertex, class Edge and class Graph
+//	 - CreateRandomGraph
+//	 - printPath
+//	 - dijkstra
+//	 - aStar
 //
 // Each function is documented in detail in its corresponding
 // header file.
@@ -28,23 +35,25 @@
 #include <chrono>
 
 #include "sorting.h"
+#include "graph.h"
 
 int main()
 {
-	vector<int> llista;
+	// false --> not directed graph
+	Graph graph(false);
 
-	CreateRandom(llista, 1000000, 0, 1000000);
+	// Generates a random graph with 1000 vertices and 5000 Edges (x2 since graph is not directed)
+	graph.generateRandomGraph(1000, 5000);
 
-	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
-	cout << "Sorting with QuickSort..." << endl;
+	// Applies dijkstra algorithm to calculate path from start to all other vertices
+	dijkstra(graph, 0);
 
-	auto start = chrono::high_resolution_clock::now();
-	QuickSort(llista);
-	auto end = chrono::high_resolution_clock::now();
+	// Shows path from start to vertice 500
+	printPath(graph, 500);
 
-	cout << "Sorted? : " << CheckIfSorted(llista) << endl;
-
-	auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-
-	cout << "Time elapsed: " << duration << endl;
+	// Applies aStar to get shortest path from 750 to 50
+	aStar(graph, 750, 50);
+	
+	// Shows path from start to vertice 50
+	printPath(graph, 50);
 }
