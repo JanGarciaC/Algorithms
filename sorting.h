@@ -345,3 +345,42 @@ void MergeSort(vector<T>& list)
 
     MergeSortRec(list, 0, list.size() - 1);
 }
+
+////////////// BINARYSEARCH IMPLEMENTATION //////////////
+//
+//               Binary Search Algorithm
+//
+// Searches a vector looking for specified element. Returns
+// element index or -1 if element not found.
+//
+// Time Complexity:
+//   - O(log N)
+//
+// Space Complexity:
+//   - O(1)
+//
+// Notes:
+//   - Only works on sorted vectors
+//
+////////////////////////////////////////////////////////
+template <typename T>
+int binarySearch(vector<T>& list, T element)
+{
+    int min = 0, max = list.size() - 1;
+    int i = (max + min) / 2;
+
+    while (list[i] != element)
+    {
+        if (element < list[i])
+            max = i;
+        else
+            min = i;
+
+        i = (max + min) / 2;
+
+        if (min == max || i == min || i == max)
+            return -1;
+    }
+
+    return i;
+}
